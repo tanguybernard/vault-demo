@@ -1,0 +1,51 @@
+body {
+    line-height: 27px;
+    font-size: 14px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    color: #777777;
+    height: 20em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    color: #6e6eff;
+    width:70%;
+    margin-left:15%;
+    margin-right:15%;
+    text-align:center;
+
+}
+
+
+#vaultinfo {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width:70%;
+    margin-left:15%;
+    margin-right:15%;
+    margin-top: 10vh;
+}
+
+#vaultinfo td, #vaultinfo th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#vaultinfo tr:nth-child(even){background-color: #f2f2f2;}
+
+#vaultinfo tr:hover {background-color: #ddd;}
+
+#vaultinfo th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: cornflowerblue;
+    color: white;
+}
