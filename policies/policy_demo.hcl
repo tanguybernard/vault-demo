@@ -1,3 +1,3 @@
-path "secret_team_back/demo" {
+path "secret/back/demo" {
   capabilities=["read"]
 }

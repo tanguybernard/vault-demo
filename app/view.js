@@ -1,5 +1,15 @@
-module.exports.display = ({message, token, secrets}) => {
-    let mydAta = secrets ? JSON.stringify(secrets.data) : "Get out !!!!"
+module.exports.display = ({message, wrap_token, client_token, secrets}) => {
+
+    let myData = ''
+    if(secrets){
+        for (const [key, val] of Object.entries(secrets.data)) {
+            myData+=`<tr><td>${key}</td><td>${val}</td></tr>`;
+
+        }
+    }
+    else{
+        myData='<tr><td>Data</td><td>Nope !!!</td></tr>';
+    }
 
     return `
 <html>
@@ -14,13 +24,14 @@ module.exports.display = ({message, token, secrets}) => {
             <th>Value</th>
         </tr>
         <tr>
-            <td>Token</td>
-            <td>${token}</td>
+            <td>Wrap Token</td>
+            <td>${wrap_token}</td>
         </tr>
         <tr>
-            <td>Data</td> 
-            <td>${mydAta}</td>
+            <td>Client Token</td>
+            <td>${client_token}</td>
         </tr>
+        ${myData}
     </table>
 </body>
 

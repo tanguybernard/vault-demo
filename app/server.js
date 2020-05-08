@@ -34,10 +34,10 @@ const handleRequest =
                     if(!process.env.VAULT_TOKEN){
                         const unwrap = await vault.unwrapToken(VAULT_WRAP_TOKEN);
                         const auth = await vault.authLogin({secret_id: unwrap.data.secret_id, role_id: VAULT_ROLE_ID});
-                        process.env.MY_VARIABLE = auth.auth.client_token || null;
+                        process.env.VAULT_TOKEN = auth.auth.client_token || null;
 
                     }
-                    secrets = await vault.getVaultSecret(process.env.MY_VARIABLE)
+                    secrets = await vault.getVaultSecret(process.env.VAULT_TOKEN)
                 } catch (e) {
                     console.log(e);
                 }
@@ -48,7 +48,8 @@ const handleRequest =
                 res.writeHead(200, {
                     'Content-Type': 'text/html'
                 });
-                res.write(view.display({message, token: VAULT_WRAP_TOKEN, secrets}));
+                res.write(view.display(
+                    {message, wrap_token: VAULT_WRAP_TOKEN, client_token: process.env.VAULT_TOKEN, secrets}));
         }
          res.end();
 

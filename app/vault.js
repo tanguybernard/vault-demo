@@ -1,6 +1,6 @@
 var request = require('request-promise');
 
-const URL = 'http://127.0.0.1:8200/'
+const URL = 'http://127.0.0.1:8200'
 
 module.exports.authLogin =  async function authLogin(body) {
 
@@ -15,7 +15,7 @@ module.exports.authLogin =  async function authLogin(body) {
 module.exports.getVaultSecret = async function getVaultSecret(token) {
 
     const options = {
-        url: `${URL}/v1/secret_team_back/demo`,
+        url: `${URL}/v1/secret/back/demo`,
         json: true,
         headers: {
             'X-Vault-Token': token
