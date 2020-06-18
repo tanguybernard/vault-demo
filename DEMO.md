@@ -2,7 +2,16 @@
 
 ## 1. Up container
 
-    docker-compose up
+Db first
+
+    dco down && dco build && dco up -d db
+    
+And Vault
+    
+    dco up -d vault
+    
+    
+NB: remove data directory if you want to init again the vault    
 
 ## 2. Inside container
 
@@ -29,7 +38,11 @@ key-threshold: Number of key required to unseal the master
       
 ## 6. Create path for secret
 
-    vault secrets enable -address=http://127.0.0.1:8200 -path=secret/back kv   
+    vault secrets enable -path=secret/back kv
+    
+When running v2 of the kv backend a key can retain a configurable number of versions.    
+
+Source: https://www.vaultproject.io/docs/secrets/kv
       
 ## 7.Write a secret
 
@@ -47,7 +60,7 @@ key-threshold: Number of key required to unseal the master
 
     vault policy write te_role_id policies/policy_trusted_entity_role_id.hcl
 
-## 11. Create a policy secret  id
+## 11. Create a policy secret id
 
     vault policy write te_secret_id policies/policy_trusted_entity_secret_id.hcl
 
@@ -74,7 +87,7 @@ https://www.vaultproject.io/docs/auth/approle
 
     vault token lookup <token>
 
-## 16. Create Token for ansible, kubernets...
+## 16. Create Token for ansible, kubernetes...
 
     vault token create -policy=te_secret_id -display-name=Ansible
        
@@ -86,11 +99,14 @@ https://www.vaultproject.io/docs/auth/approle
     
     curl --header "X-Vault-Token: <TOKEN>" http://127.0.0.1:8200/v1/auth/approle/role/demo-app-role/role-id
 
+
+>> For instance, mAke a cron to renew the token
+
 ## 19. Create wrapped token
 
     curl --header "X-Vault-Token: s.m3SSKYBl6NBgX55eOuIrK9Ep" -H "x-vault-wrap-ttl: 600" --request POST http://127.0.0.1:8200/v1/auth/approle/role/demo-app-role/secret-id
 
-ttl: 60 secondes, be carreful, on the demo to unwarp quickly
+ttl: 600 secondes, be carreful, on the demo to unwarp quickly
 
 Wrapped token , not directly secret_id to avoid an attacker to use secret to create token for himself
 
@@ -104,20 +120,6 @@ Wrapped token , not directly secret_id to avoid an attacker to use secret to cre
 
     PORT=3001 VAULT_WRAP_TOKEN=s.xU3K22N6D3m2TbqU5LeGHU2T VAULT_ROLE_ID=32d9474b-7f51-f700-53fe-65f4a5f1d6c8 node app/server.js
 
-## 21. Or use Client Token (strategy, use token for every connection to the plateforme)
+## 21. Or use Client Token (strategy, use token for every connection to the plateform)
 
-    PORT=3001 VAULT_TOKEN=s.PGeQr4tNjCgIZuyNpHa1NnJn VAULT_ROLE_ID=32d9474b-7f51-f700-53fe-65f4a5f1d6c8 node app/server.js
-
-
-L'exemple suivant permet d'afficher les processus des autres utilisateurs de façon descendante en affichant les noms des utilisateurs sur des processus n'ayant pas de terminal (comme apache par exemple) :
-
-
-ps faux | grep 'your_process'
-
-ps faux | grep node
-
-strings /proc/<procID>/environ
-
-
-
-vault token revoke
+    PORT=3001 VAULT_TOKEN=s.PGeQr4tNjCgIZuyNpHa1NnJn node app/server.js

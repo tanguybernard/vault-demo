@@ -1,7 +1,12 @@
+# VAULT
 
-# Let's go
+## DEMO
 
-## Run yours containers
+    Check the DEMO.md, it's pretty cool
+
+## Containers
+
+### Run yours containers
 
     docker-compose up
     
@@ -14,6 +19,12 @@ If something goes wrong:
 ### Go Inside Container
 
     docker exec -it vaultserver /bin/sh
+    
+## Vault Commands
+
+Outside container, you can use:
+
+    docker exec -it vaultserver <cmd>
    
 ### Initilize Vault
     
@@ -36,57 +47,56 @@ or directly inside
 
 NB: To use the policy, create a token and assign it to that policy
     
-### Enable new path
+### Enable new path with key/value secret
 
-    docker exec -it vaultserver vault secrets enable -address=http://127.0.0.1:8200 -path=kv kv
-    docker exec -it vaultserver vault secrets enable -address=http://127.0.0.1:8200 -path=secret kv    
+    vault secrets enable -path=secret/backend kv    
 
 kv: for Key/Value
 
-### List secrets
+### List secrets path
 
-    docker exec -it vaultserver vault secrets list -address=http://127.0.0.1:8200    
+    vault secrets list   
     
 ### Write a secret (Json file)
 
-    docker exec -it vaultserver vault write -address=http://127.0.0.1:8200 secret/weatherapp/config "@/config/sample.json"
+    vault write secret/weatherapp/config "@/config/sample.json"
 
 ### Read secret
 
-    docker exec -it vaultserver vault read -address=http://127.0.0.1:8200 secret/weatherapp/config
+    vault read secret/weatherapp/config
     
-# Check format of policy
+### Check format of policy
 
     vault policy fmt my-policy.hcl    
     
 ### Import a policy 
 
-    docker exec -it vaultserver vault policy write -address=http://127.0.0.1:8200  weatherapp policies/policy.hcl    
+    vault policy write -address=http://127.0.0.1:8200  weatherapp policies/policy.hcl    
     
 ex: wheatherapp it's the name of policy with policies/policy.hcl conf
 
     
-### Create a token
+### Create a token (period=30m: duration 30m)
 
     vault token create -period=30m -policy=my-policy -policy=other-policy
 
-### Curl
+## Curl
 
 #### Get secret
 
     curl -H "X-Vault-Token: <token>" -X GET  http://127.0.0.1:8200/v1/secret/weatherapp/config
 
-#### Post secret (à tester http ou https ? Policy ? ....)
+#### Post secret
 
     curl --header "X-Vault-Token: ..." --request POST --data @payload.json https://127.0.0.1:8200/v1/secret/my-secret
 
-#### Renew Token (ex: period=30m, the token will be renewed for 30min again)
+#### Renew Token
 
     curl -X POST -H "X-Vault-Token: <token>" http://127.0.0.1:8200/v1/auth/token/renew-self
 
 #### Check the TTL Token using the following request
 
-    curl -X POST -H "X-Vault-Token: s.Qt3VFkb5ndv7IeegJwLsepD6" http://127.0.0.1:8200/v1/auth/token/lookup-self
+    curl -X POST -H "X-Vault-Token: <token>" http://127.0.0.1:8200/v1/auth/token/lookup-self
 
 
 ## Credits

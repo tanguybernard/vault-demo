@@ -1,41 +1,55 @@
 version: '3'
- 
+
 services:
   db:
-     image: mysql:5.7
-     volumes:       
-       - "./data/db/mysql:/var/lib/mysql"
-     #restart: always
-     container_name: vault_db
-     ports:
+    image: mysql:5.7
+    volumes:
+      - "./data/db/mysql:/var/lib/mysql"
+    #restart: always
+    container_name: vault_db
+    ports:
       - "3307:3306"
-     environment:
-       MYSQL_ROOT_PASSWORD: vaultysalty
-       MYSQL_DATABASE: vault
-       MYSQL_USER: vault
-       MYSQL_PASSWORD: vault
-     healthcheck:
+    environment:
+      MYSQL_ROOT_PASSWORD: vaultysalty
+      MYSQL_DATABASE: vault
+      MYSQL_USER: vault
+      MYSQL_PASSWORD: vault
+    healthcheck:
       test: ["CMD", "mysql" ,"-h", "127.0.0.1", "-P", "3306", "-u", "vault", "-pvault", "-e", "SELECT 1", "vault"]
       interval: 1s
       timeout: 3s
       retries: 30
+  dbdynam:
+    image: mysql:5.7
+    volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      - ./data/dbdynam/mysql:/var/lib/mysql
+    #restart: always
+    container_name: dynam_db
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: db_1
+      MYSQL_USER: tanguy
+      MYSQL_PASSWORD: tanguypass
   vault:
-      image: vault:1.4.0
-      container_name: vaultserver
-      depends_on:
-        - db
-      links:
-        - "db:db"
-      hostname: "vault"
-      #restart: unless-stopped
-      environment:
-        VAULT_ADDR: http://127.0.0.1:8200
-        VAULT_API_ADDR: http://127.0.0.1:8200
-      volumes:
-       - ./config:/config
-       - ./policies:/policies
-       - ./log:/vault/log
-      ports:
-        - "8200:8200"
-      entrypoint:
-        vault server -config=/config/config.hcl    
+    image: vault:1.4.0
+    container_name: vaultserver
+    depends_on:
+      - db
+    links:
+      - "db:db"
+    hostname: "vault"
+    #restart: unless-stopped
+    environment:
+      VAULT_ADDR: http://127.0.0.1:8200
+      VAULT_API_ADDR: http://127.0.0.1:8200
+    volumes:
+      - ./config:/config
+      - ./policies:/policies
+      - ./log:/vault/log
+    ports:
+      - "8200:8200"
+    entrypoint:
+      vault server -config=/config/config.hcl

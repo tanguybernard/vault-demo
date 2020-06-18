@@ -12,17 +12,16 @@ const VAULT_ROLE_ID = process.env.VAULT_ROLE_ID || null;
 
 let cssFile
 
-fs.readFile(__dirname+'/style.css', function(err, data) {
-    if (err){
+fs.readFile(__dirname + '/style.css', function (err, data) {
+    if (err) {
         throw err;
     }
     cssFile = data;
 });
 
-
 const handleRequest =
     async (req, res) => {
-    console.log(req.url);
+        console.log(req.url);
         switch (req.url) {
             case "/style.css" :
                 res.writeHead(200, {"Content-Type": "text/css"});
@@ -31,7 +30,7 @@ const handleRequest =
             default :
                 let secrets
                 try {
-                    if(!process.env.VAULT_TOKEN){
+                    if (!process.env.VAULT_TOKEN) {
                         const unwrap = await vault.unwrapToken(VAULT_WRAP_TOKEN);
                         const auth = await vault.authLogin({secret_id: unwrap.data.secret_id, role_id: VAULT_ROLE_ID});
                         process.env.VAULT_TOKEN = auth.auth.client_token || null;
@@ -43,7 +42,7 @@ const handleRequest =
                 }
 
                 const queryObject = url.parse(req.url, true).query;
-                const message = queryObject.user ? `${MY_VARIABLE} ${queryObject.user}` : `${MY_VARIABLE} TZEBRA`
+                const message = queryObject.user ? `${MY_VARIABLE} ${queryObject.user}` : `${MY_VARIABLE} Zenika`
 
                 res.writeHead(200, {
                     'Content-Type': 'text/html'
@@ -51,8 +50,7 @@ const handleRequest =
                 res.write(view.display(
                     {message, wrap_token: VAULT_WRAP_TOKEN, client_token: process.env.VAULT_TOKEN, secrets}));
         }
-         res.end();
-
+        res.end();
     }
 
 const PORT = process.env.PORT || 3000;
