@@ -2,7 +2,7 @@
 
 ## DEMO
 
-    Check the DEMO.md, it's pretty cool
+    Check this [DEMO](DEMO.md)
 
 ## Install
 
