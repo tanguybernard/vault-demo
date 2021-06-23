@@ -66,6 +66,10 @@ ex: wheatherapp it's the name of policy with policies/policy.hcl conf
 
     curl -H "X-Vault-Token: <token>" -X GET  http://127.0.0.1:8200/v1/secret/weatherapp/config
 
+__(UPDATE)__
+
+    curl -H "X-Vault-Token: <token>" -X GET  http://127.0.0.1:8200/v1/secret/data/weatherapp/config
+
 #### Post secret
 
     curl --header "X-Vault-Token: ..." --request POST --data @payload.json https://127.0.0.1:8200/v1/secret/my-secret
