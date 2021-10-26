@@ -70,9 +70,10 @@ When tokens are created, a token accessor is also created and returned. This acc
 - Revoke the token
 
 
-    vault token lookup -accessor <token>
 
-    vault token revoke -accessor <token>
+        vault token lookup -accessor <token>
+
+        vault token revoke -accessor <token>
 
 
 ## Curl
