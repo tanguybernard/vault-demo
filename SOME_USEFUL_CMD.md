@@ -60,6 +60,21 @@ ex: wheatherapp it's the name of policy with policies/policy.hcl conf
 
     vault token create -period=30m -policy=my-policy -policy=other-policy
 
+### Accessor Token Lookup and revoke
+
+When tokens are created, a token accessor is also created and returned. This accessor is a value that acts as a reference to a token and can only be used to perform limited actions:
+
+- Look up a token's properties (not including the actual token ID)
+- Look up a token's capabilities on a path
+- Renew the token
+- Revoke the token
+
+
+    vault token lookup -accessor <token>
+
+    vault token revoke -accessor <token>
+
+
 ## Curl
 
 #### Get secret
